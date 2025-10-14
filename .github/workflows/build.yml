@@ -20,23 +20,24 @@ jobs:
                   distribution: temurin
                   java-version: 20
 
-            - name: Download DepotDownloader release
+            - name: Install DepotDownloader via winget
               shell: pwsh
               run: |
-                  $releaseUrl = "https://github.com/SteamRE/DepotDownloader/releases/latest/download/DepotDownloader.ps1"
-                  $ddPath = "$env:USERPROFILE\DepotDownloader.ps1"
+                  Write-Host "Installing DepotDownloader via winget..."
+                  winget install --exact --id SteamRE.DepotDownloader -e
 
-                  Invoke-WebRequest -Uri $releaseUrl -OutFile $ddPath
-                  if (-not (Test-Path $ddPath)) {
-                    Write-Error "❌ Failed to download DepotDownloader.ps1"
+                  # DepotDownloader path
+                  $ddExe = "C:\Program Files\SteamRE\DepotDownloader\DepotDownloader.exe"
+                  if (-not (Test-Path $ddExe)) {
+                    Write-Error "❌ DepotDownloader.exe not found after winget install"
                     exit 1
                   }
-                  Write-Host "✅ Downloaded DepotDownloader.ps1 to $ddPath"
+                  Write-Host "✅ DepotDownloader installed at $ddExe"
 
             - name: Download Rising World Dedicated Server (anonymous)
               shell: pwsh
               run: |
-                  $ddExe = "$env:USERPROFILE\DepotDownloader.ps1"
+                  $ddExe = "C:\Program Files\SteamRE\DepotDownloader\DepotDownloader.exe"
                   $appId = 339010
                   $depotId = 339012
                   $branch = "public"
@@ -48,7 +49,7 @@ jobs:
                   }
 
                   Write-Host "Downloading Rising World Dedicated Server..."
-                  pwsh $ddExe -app $appId -depot $depotId -branch $branch -dir $outputDir -anonymous
+                  & $ddExe -app $appId -depot $depotId -branch $branch -dir $outputDir -anonymous
 
                   # Check if PluginAPI.jar exists
                   $pluginApiPath = Join-Path $outputDir "Data\Java\PluginAPI.jar"
@@ -59,7 +60,7 @@ jobs:
 
                   Write-Host "✅ Found PluginAPI.jar at $pluginApiPath"
 
-                  # Set environment variable
+                  # Set environment variable for next steps
                   echo "RISINGWORLD_PLUGINAPI_PATH=$pluginApiPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
 
             - name: Build project
