@@ -15,10 +15,15 @@ jobs:
               uses: actions/checkout@v3
 
             - name: Set up JDK 20
-              uses: actions/setup-java@v3
+              uses: actions/setup-java@v4
               with:
                   distribution: temurin
                   java-version: 20
+
+            - name: Setup Gradle
+              uses: gradle/actions/setup-gradle@v5
+              with:
+                  gradle-version: 9.1.0 # optional; installs a specific version
 
             - name: Download DepotDownloader binary
               shell: pwsh
@@ -34,8 +39,8 @@ jobs:
                   $ddExe = Join-Path $installDir "DepotDownloader.exe"
 
                   if (-not (Test-Path $ddExe)) {
-                  Write-Error "❌ DepotDownloader.exe not found after extraction"
-                  exit 1
+                    Write-Error "❌ DepotDownloader.exe not found after extraction"
+                    exit 1
                   }
                   Write-Host "✅ DepotDownloader ready at $ddExe"
 
@@ -48,7 +53,6 @@ jobs:
                   $branch = "public"
                   $outputDir = "$env:USERPROFILE\RisingWorldDedicatedServer"
 
-                  # Remove old folder if exists
                   if (Test-Path $outputDir) {
                       Remove-Item $outputDir -Recurse -Force
                   }
@@ -56,7 +60,6 @@ jobs:
                   Write-Host "Downloading Rising World Dedicated Server..."
                   & $ddExe -app $appId -depot $depotId -branch $branch -dir $outputDir -anonymous
 
-                  # Check if PluginAPI.jar exists
                   $pluginApiPath = Join-Path $outputDir "Data\Java\PluginAPI.jar"
                   if (-not (Test-Path $pluginApiPath)) {
                       Write-Error "PluginAPI.jar not found at $pluginApiPath"
@@ -64,13 +67,12 @@ jobs:
                   }
 
                   Write-Host "✅ Found PluginAPI.jar at $pluginApiPath"
-
-                  # Set environment variable for next steps
                   echo "RISINGWORLD_PLUGINAPI_PATH=$pluginApiPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
 
-            - name: Build project
+            - name: Build project with Gradle
               shell: pwsh
-              run: "& ./gradlew.bat clean build"
+              run: gradle clean build
+              working-directory: . # adjust if your project is in a subfolder
 
             - name: Zip dist contents
               shell: pwsh
@@ -83,17 +85,14 @@ jobs:
 
                   $zipName = "RisingMachines-dist.zip"
 
-                  # Get all subfolders inside dist
                   $items = Get-ChildItem -Path $distPath -Directory
                   if (-not $items) {
                     Write-Error "❌ No folders inside dist to zip!"
                     exit 1
                   }
 
-                  # Zip the subfolders (contents only)
                   Compress-Archive -Path $items.FullName -DestinationPath $zipName -Force
                   Write-Host "✅ Created zip: $zipName"
-
                   echo "ZIP_PATH=$zipName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
 
             - name: Upload artifact
