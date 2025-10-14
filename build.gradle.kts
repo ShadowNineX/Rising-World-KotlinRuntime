@@ -35,9 +35,9 @@ repositories {
 // Dependencies
 // ---------------------------
 
-// Require PluginAPI path from environment variable
-val pluginApiPath = System.getenv("RISINGWORLD_PLUGINAPI_PATH")
-    ?: error("❌ Environment variable RISINGWORLD_PLUGINAPI_PATH not set. Please set it to the full path of PluginAPI.jar")
+// Read from gradle.properties
+val pluginApiPath: String = findProperty("PLUGINAPIJAR")?.toString()
+    ?: error("❌ Gradle property 'PLUGINAPIJAR' not set in gradle.properties")
 
 val pluginApiFile = file(pluginApiPath)
 if (!pluginApiFile.exists()) {
@@ -119,6 +119,30 @@ val copyToDist by tasks.registering(Copy::class) {
 tasks.build {
     finalizedBy(copyToDist)
 }
+
+// ---------------------------
+// Zip fat JAR into KotlinRuntime-<version>.zip
+// ---------------------------
+val zipDist by tasks.registering(Zip::class) {
+    dependsOn(fatJar)
+
+    val jarFile = fatJar.get().archiveFile.get().asFile
+
+    // inside the zip, create a folder named KotlinRuntime/
+    from(jarFile) {
+        into("KotlinRuntime")
+        rename { "KotlinRuntime-${project.version}.jar" } // rename inside the zip
+    }
+
+    archiveFileName.set("KotlinRuntime-${project.version}.zip")
+    destinationDirectory.set(layout.projectDirectory.dir("dist"))
+}
+
+tasks.build {
+    finalizedBy(zipDist)
+}
+
+
 
 // ---------------------------
 // Clean dist folder
