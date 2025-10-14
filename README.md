@@ -10,6 +10,13 @@ It's better to just use 1 file instead of bundling in the Kotlin runtime multipl
 
 ## How to install?
 
-Just grab the current release from: https://github.com/hedgehogform/Rising-World-KotlinRuntime/releases page.
+Just grab the current release from the [Releases](https://github.com/hedgehogform/Rising-World-KotlinRuntime/releases) page.
 
 Just unzip the Kotlin-Runtime into the Plugins folder of game or server.
+
+## Devs
+
+### How to compile?
+
+You need to have gradle and java installed and then create `gradle.properties` file with contents: 
+`PLUGINAPIJAR=C:/Path/To/PluginAPI.jar` replace it with your actual location of the jar file on your system. Usually in either: `C:\Program Files (x86)\Steam\steamapps\common\RisingWorld\Data\Java\PluginAPI.jar` or `C:\Program Files (x86)\Steam\steamapps\common\RisingWorldDedicatedServer\Data\Java\PluginAPI.jar`
