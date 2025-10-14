@@ -20,19 +20,24 @@ jobs:
                   distribution: temurin
                   java-version: 20
 
-            - name: Install DepotDownloader via winget
+            - name: Download DepotDownloader binary
               shell: pwsh
               run: |
-                  Write-Host "Installing DepotDownloader via winget..."
-                  winget install --exact --id SteamRE.DepotDownloader -e
+                  $url = "https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownloader_3.4.0/DepotDownloader-windows-x64.zip"
+                  $zipPath = "$env:USERPROFILE\DepotDownloader.zip"
+                  $installDir = "$env:USERPROFILE\DepotDownloader"
 
-                  # DepotDownloader path
-                  $ddExe = "C:\Program Files\SteamRE\DepotDownloader\DepotDownloader.exe"
+                  Invoke-WebRequest -Uri $url -OutFile $zipPath
+
+                  # Extract
+                  Expand-Archive -Path $zipPath -DestinationPath $installDir -Force
+                  $ddExe = Join-Path $installDir "DepotDownloader.exe"
+
                   if (-not (Test-Path $ddExe)) {
-                    Write-Error "❌ DepotDownloader.exe not found after winget install"
-                    exit 1
+                  Write-Error "❌ DepotDownloader.exe not found after extraction"
+                  exit 1
                   }
-                  Write-Host "✅ DepotDownloader installed at $ddExe"
+                  Write-Host "✅ DepotDownloader ready at $ddExe"
 
             - name: Download Rising World Dedicated Server (anonymous)
               shell: pwsh
