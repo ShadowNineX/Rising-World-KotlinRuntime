@@ -83,20 +83,22 @@ jobs:
                     exit 1
                   }
 
-                  $zipName = "RisingMachines-dist.zip"
+                  $zipName = "KotlinRuntime-dist.zip"
 
-                  $items = Get-ChildItem -Path $distPath -Directory
-                  if (-not $items) {
-                    Write-Error "❌ No folders inside dist to zip!"
+                  # Get all files recursively inside dist
+                  $files = Get-ChildItem -Path $distPath -Recurse -File
+                  if (-not $files) {
+                    Write-Error "❌ No files inside dist to zip!"
                     exit 1
                   }
 
-                  Compress-Archive -Path $items.FullName -DestinationPath $zipName -Force
+                  # Zip files while preserving relative paths
+                  Compress-Archive -Path $files.FullName -DestinationPath $zipName -Force
                   Write-Host "✅ Created zip: $zipName"
                   echo "ZIP_PATH=$zipName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
 
             - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: RisingMachines-dist
+                  name: KotlinRuntime-dist
                   path: ${{ env.ZIP_PATH }}
