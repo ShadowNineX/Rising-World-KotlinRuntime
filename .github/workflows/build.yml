@@ -42,7 +42,7 @@ jobs:
             - name: Download Rising World Dedicated Server (anonymous)
               shell: pwsh
               run: |
-                  $ddExe = "C:\Program Files\SteamRE\DepotDownloader\DepotDownloader.exe"
+                  $ddExe = "$env:USERPROFILE\DepotDownloader\DepotDownloader.exe"
                   $appId = 339010
                   $depotId = 339012
                   $branch = "public"
@@ -50,7 +50,7 @@ jobs:
 
                   # Remove old folder if exists
                   if (Test-Path $outputDir) {
-                    Remove-Item $outputDir -Recurse -Force
+                      Remove-Item $outputDir -Recurse -Force
                   }
 
                   Write-Host "Downloading Rising World Dedicated Server..."
@@ -59,8 +59,8 @@ jobs:
                   # Check if PluginAPI.jar exists
                   $pluginApiPath = Join-Path $outputDir "Data\Java\PluginAPI.jar"
                   if (-not (Test-Path $pluginApiPath)) {
-                    Write-Error "PluginAPI.jar not found at $pluginApiPath"
-                    exit 1
+                      Write-Error "PluginAPI.jar not found at $pluginApiPath"
+                      exit 1
                   }
 
                   Write-Host "✅ Found PluginAPI.jar at $pluginApiPath"
