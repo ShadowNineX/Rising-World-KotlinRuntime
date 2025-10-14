@@ -70,7 +70,7 @@ jobs:
 
             - name: Build project
               shell: pwsh
-              run: "& gradlew.bat clean build"
+              run: "& ./gradlew.bat clean build"
 
             - name: Zip dist contents
               shell: pwsh
