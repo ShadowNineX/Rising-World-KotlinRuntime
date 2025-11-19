@@ -46,7 +46,7 @@ if (!pluginApiFile.exists()) {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation(files(pluginApiFile))
+    compileOnly(files(pluginApiFile))
 }
 
 // ---------------------------
@@ -81,7 +81,7 @@ tasks.compileKotlin {
 }
 
 // ---------------------------
-// Fat JAR (includes all dependencies)
+// Fat JAR (includes only Kotlin stdlib, excludes PluginAPI)
 // ---------------------------
 val fatJar by tasks.registering(Jar::class) {
     archiveClassifier.set("")
@@ -89,8 +89,13 @@ val fatJar by tasks.registering(Jar::class) {
 
     from(sourceSets.main.get().output)
 
+    // Only bundle runtimeClasspath dependencies (Kotlin stdlib)
+    // Excludes compileOnly dependencies like PluginAPI
     from({
-        configurations.runtimeClasspath.get().filter { it.name.endsWith(".jar") }.map { zipTree(it) }
+        configurations.runtimeClasspath.get()
+            .filter { it.name.endsWith(".jar") }
+            .filter { it != pluginApiFile }  // Explicitly exclude PluginAPI
+            .map { zipTree(it) }
     })
 
     manifest {
