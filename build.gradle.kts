@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.hedgehogform.KotlinRuntime"
-version = "1.0"
+version = "1.0.1"
 
 // ---------------------------
 // Java Toolchain

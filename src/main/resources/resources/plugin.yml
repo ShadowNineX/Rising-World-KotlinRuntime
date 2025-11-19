@@ -1,6 +1,6 @@
 name: KotlinRuntime
 main: hedgehogform.KotlinRuntime.KotlinPlugin
-version: 1.0.0
+version: 1.0.1
 author: hedgehogform
 description: "A plugin that adds Kotlin support to Rising World API. (Doesn't do anything by it's own)"
 loadorder: -69420
