@@ -10,7 +10,7 @@ It's better to just use 1 file instead of bundling in the Kotlin runtime multipl
 
 ## How to install?
 
-Just grab the current release from the [Releases](https://github.com/hedgehogform/Rising-World-KotlinRuntime/releases) page.
+Just grab the current release from the [Releases](https://github.com/ShadowNineX/Rising-World-KotlinRuntime/releases) page.
 
 Just unzip the Kotlin-Runtime into the Plugins folder of game or server.
 

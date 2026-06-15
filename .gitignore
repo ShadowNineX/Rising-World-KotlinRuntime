@@ -1,68 +1,63 @@
-# ----------------------------
-# Maven
-# ----------------------------
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-
-# ----------------------------
-# Gradle
-# ----------------------------
+# Gradle / Kotlin build output
 .gradle/
 build/
-!gradle/wrapper/gradle-wrapper.jar
-!gradle/wrapper/gradle-wrapper.properties
-gradle.properties
-
-# Reports & caches
-build/reports/
-.kotlinc/
 .kotlin/
-
-# ----------------------------
-# IntelliJ IDEA / JetBrains
-# ----------------------------
-.idea/
-*.iml
-*.iws
-*.ipr
+.kotlinc/
 out/
 
-# ----------------------------
-# VSCode
-# ----------------------------
-.vscode/
+# Keep the Gradle wrapper committed
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
 
-# ----------------------------
-# Kotlin / Java artifacts
-# ----------------------------
+# Local machine configuration
+gradle.properties
+local.properties
+*.local.properties
+.env
+.env.*
+
+# Packaged plugin output
+dist/
+target/
+
+# Java / Kotlin artifacts
 *.class
-*.log
 *.jar
+!gradle/wrapper/gradle-wrapper.jar
 *.war
 *.ear
 *.nar
 *.zip
-*.tar.gz
 *.tar
+*.tar.gz
 hs_err_pid*
+replay_pid*
 *.hprof
 
-# ----------------------------
-# Distribution / Packaging
-# ----------------------------
-dist/
+# IDEs and editors
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.swp
+*.swo
 
-# ----------------------------
-# OS-specific
-# ----------------------------
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+/.cache/
+/tmp/
+/META-INF/
+
+# OS files
 .DS_Store
 Thumbs.db
 ehthumbs.db
 desktop.ini
+
+# AI/editor assistant local state
+.claude/
+.codex/
+bin/

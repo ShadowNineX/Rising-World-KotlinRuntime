@@ -1,4 +1,4 @@
-package hedgehogform.KotlinRuntime
+package shadownine.KotlinRuntime
 
 object ModInfo {
     const val name: String = "@project.name@"
